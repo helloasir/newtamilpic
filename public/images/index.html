@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Image 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .image-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 20px 0;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navigation {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .date-display {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .share-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .share-buttons a {
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        .share-buttons a:hover {
+            opacity: 0.8;
+        }
+        .whatsapp { background-color: #25D366; }
+        .telegram { background-color: #0088cc; }
+        .facebook { background-color: #1877f2; }
+        .instagram { background-color: #e4405f; }
+        .twitter { background-color: #000000; }
+        .pinterest { background-color: #bd081c; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Daily Image 2025</h1>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+        </div>
+    </div>
+    <div class="date-display" id="dateDisplay"></div>
+    <div class="navigation">
+        <button onclick="changeDate(-1)">Yesterday</button>
+        <button onclick="changeDate(1)">Tomorrow</button>
+    </div>
+    <div class="image-container">
+        <img id="dailyImage" alt="Daily Image">
+    </div>
+    <div class="share-buttons">
+        <a href="#" class="whatsapp" onclick="share('whatsapp')"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="telegram" onclick="share('telegram')"><i class="fab fa-telegram"></i></a>
+        <a href="#" class="facebook" onclick="share('facebook')"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="instagram" onclick="share('instagram')"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="twitter" onclick="share('twitter')"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" class="pinterest" onclick="share('pinterest')"><i class="fab fa-pinterest"></i></a>
+    </div>
+    <script>
+        let currentDate = new Date('2025-01-16');
+
+        function formatDate(date) {
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function updateImage() {
+            document.getElementById('dateDisplay').textContent = formatDate(currentDate);
+            const dateString = currentDate.toISOString().split('T')[0];
+            document.getElementById('dailyImage').src = `/image/${dateString}`;
+            
+            // Update URL for sharing
+            const dayOfYear = Math.floor((currentDate - new Date('2025-01-01')) / (1000 * 60 * 60 * 24)) + 1;
+            window.history.replaceState({}, '', `/${String(dayOfYear).padStart(3, '0')}`);
+        }
+
+        function changeDate(days) {
+            const newDate = new Date(currentDate);
+            newDate.setDate(currentDate.getDate() + days);
+            
+            if (newDate.getFullYear() === 2025) {
+                currentDate = newDate;
+                updateImage();
+            }
+        }
+
+        function share(platform) {
+            const url = window.location.href;
+            const text = `Check out this daily image for ${formatDate(currentDate)}!`;
+            
+            const shareUrls = {
+                whatsapp: `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`,
+                telegram: `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+                twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+                pinterest: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(url)}&description=${encodeURIComponent(text)}`,
+                instagram: `https://www.instagram.com/` // Instagram doesn't support direct sharing
+            };
+
+            if (shareUrls[platform]) {
+                window.open(shareUrls[platform], '_blank');
+            }
+        }
+
+        updateImage();
+
+        function scheduleNextUpdate() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            
+            const timeUntilMidnight = tomorrow - now;
+            setTimeout(() => {
+                currentDate = new Date(currentDate);
+                currentDate.setDate(currentDate.getDate() + 1);
+                updateImage();
+                scheduleNextUpdate();
+            }, timeUntilMidnight);
+        }
+        
+        scheduleNextUpdate();
+    </script>
+</body>
+</html>

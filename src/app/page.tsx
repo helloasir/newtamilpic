@@ -45,12 +45,13 @@ export default function Home() {
       )}
       <div className="flex mt-4 space-x-4">
         <FacebookShareButton url={shareUrl} quote={quote}>
-          <FacebookIcon size={32} round />
+          <FacebookIcon size={32} round={'true'} />
         </FacebookShareButton>
         <TwitterShareButton url={shareUrl} title={quote}>
-          <TwitterIcon size={32} round />
+          <TwitterIcon size={32} round={'true'} />
         </TwitterShareButton>
       </div>
     </div>
   );
 }
+
